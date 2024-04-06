@@ -1,0 +1,30 @@
+version: "3.5"
+services:
+  queue-service:
+    build:
+      context: ./
+      dockerfile: dockerfiles/node-lts
+    image: node-lts
+    volumes: 
+      - ./app:/home/node/app
+      - ${MODELS_PATH}:/home/node/app/src/models
+      - ${FILES_PATH}:/home/node/app/files/pdfDocs
+      - ${MANIFEST_PATH}:/home/node/app/files/manifests
+    env_file:
+      - .env
+    stdin_open: true
+    command: sh -c "cd /home/node/app && npm i && npm run ${PROJECT_ENVIRONMENT}"
+    tty: true
+    ports:
+      - ${PORT}:${PORT}
+    healthcheck:
+      test: curl --fail -s http://localhost:${PORT}/ || exit 1
+      interval: 30s
+      timeout: 20s
+      retries: 2
+    restart: unless-stopped
+
+networks:
+  default:
+    external:
+      name: genesis_${PROJECT_ENVIRONMENT}

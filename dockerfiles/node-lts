@@ -1,0 +1,11 @@
+FROM node:16.15.1-stretch-slim
+
+RUN echo "deb http://archive.debian.org/debian stretch main" > /etc/apt/sources.list
+
+RUN apt-get update && apt-get install -y openssh-client sshpass less htop grep inetutils-ping vim wget curl 
+
+RUN apt-get update && apt-get install -y python build-essential
+
+RUN npm i -g create-react-app
+
+WORKDIR /home/node/app
