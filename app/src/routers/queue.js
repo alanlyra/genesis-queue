@@ -4,7 +4,7 @@ const router = new express.Router()
 const Projects = require('../models/Projects')
 const fs = require('fs').promises; // Usamos fs.promises para ter acesso às funções assíncronas do módulo fs
 const path = require('path');
-const { roadmapping } = require('../services/process');
+const { roadmapping, ner } = require('../services/process');
 const { get } = require('http');
 
 router.get('/queue', async (req, res) => {
@@ -69,7 +69,7 @@ async function processMFFile(filename) {
         if (activePromises.length > 0) {
             await Promise.race(activePromises);
         }
-    }
+    } 
 
     // Aguarde todas as promessas restantes serem resolvidas
     await Promise.all(activePromises);
@@ -79,7 +79,8 @@ async function processPDF(file) {
     // Simula o processamento de um arquivo PDF
     console.log(`Processando arquivo ${file}...`);
     const document = await getDocument(file);
-    await roadmapping(document);
+    await roadmapping(document); // Chama a função roadmapping gerando o roadmap somente com IA generativa 
+    //await ner(document);  // Chama a função ner gerando o roadmap com NER e validando com a IA generativa
 }
 
 // Função para processar os arquivos na fila
