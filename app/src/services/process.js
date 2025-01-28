@@ -31,7 +31,22 @@ async function ner(document) {
     return response
 }
 
+async function refineRoadmapAfterNER(document) {
+
+    let response = null;
+    try {
+        console.log("Initializing refinement of roadmap of document: " + document._id)
+        response = await axios.get('http://roadmap-service:4102/roadmap/refinement/document/' + document._id)
+        console.log("Finished refinement of roadmap of document: " + document._id)
+        return response
+    } catch (error) {
+        console.log(error);
+    }
+    return response
+}
+
 module.exports = {
     roadmapping,
-    ner
+    ner,
+    refineRoadmapAfterNER
   };

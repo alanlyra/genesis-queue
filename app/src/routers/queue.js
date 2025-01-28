@@ -4,7 +4,7 @@ const router = new express.Router()
 const Projects = require('../models/Projects')
 const fs = require('fs').promises; // Usamos fs.promises para ter acesso às funções assíncronas do módulo fs
 const path = require('path');
-const { roadmapping, ner } = require('../services/process');
+const { roadmapping, ner, refineRoadmapAfterNER } = require('../services/process');
 const { get } = require('http');
 
 router.get('/queue', async (req, res) => {
@@ -81,6 +81,7 @@ async function processPDF(file) {
     const document = await getDocument(file);
     await roadmapping(document); // Chama a função roadmapping gerando o roadmap somente com IA generativa 
     //await ner(document);  // Chama a função ner gerando o roadmap com NER e validando com a IA generativa
+    //await refineRoadmapAfterNER(document);  // Chama a função para validar e refinar o roadmap usando IA generativa gerado com NER
 }
 
 // Função para processar os arquivos na fila
